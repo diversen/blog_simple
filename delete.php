@@ -1,0 +1,3 @@
+<?php
+
+blogSimple::deleteController();
