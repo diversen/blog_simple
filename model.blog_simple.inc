@@ -103,7 +103,6 @@ class blogSimple {
             $filters = get_module_ini('blog_simple_filters');
             $_POST['title'] = get_filtered_content($filters, $_POST['title']);
             $_POST['content'] = get_filtered_content($filters, $_POST['content']);
-            print_r($_POST);
             if (empty($_POST['title'])) self::$errors[] = lang::translate('blog_simple_no_title');
             if (empty($_POST['content'])) self::$errors[] = lang::translate('blog_simple_no_content');
         }
