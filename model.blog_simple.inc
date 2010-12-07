@@ -101,7 +101,7 @@ class blogSimple {
     public static function sanitize(){
         if (isset($_POST['submit'])){
             $filters = get_module_ini('blog_simple_filters');
-            $_POST['title'] = get_filtered_content($filters, $_POST['title']);
+            $_POST['title'] = cos_htmlentities($_POST['title']);
             $_POST['content'] = get_filtered_content($filters, $_POST['content']);
             if (empty($_POST['title'])) self::$errors[] = lang::translate('blog_simple_no_title');
             if (empty($_POST['content'])) self::$errors[] = lang::translate('blog_simple_no_content');
@@ -171,21 +171,17 @@ class blogSimple {
         // pearPager class is a wrapper around the pear Pager.
         $pager = new pearPager($num_rows);
 
-        // select all   'table'  'fields' 'searh' 'from'  'limit'        'order_by'
+        // select all             'table' 'fields' 'searh'   'from'      'limit'       'order_by'
         $rows = $db->selectAll('blog_simple', null, null, $pager->from, PAGER_PER_PAGE, 'updated');
-
-
 
         // simple template and the view file 'index.inc' parses all rows
         // and returns a string containing our list of blog entries.
         // not a real template system, but good enough when working with simple
         // rows
         
-
         $str = get_include_contents(_COS_PATH . "/modules/blog_simple/views/index.inc", $rows);
         print $str;
 
-        
         // print pagination data.
         $pager->pearPage();
     }
