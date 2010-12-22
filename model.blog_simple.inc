@@ -419,10 +419,8 @@ class blogSimple {
      * @return boolean
      */
     private static function deleteEntry (){
-
         $db = new db();
         $res = $db->delete('blog_simple', 'id', self::getEntryId());
-
         return $res;
     }
 
