@@ -113,8 +113,12 @@ class blogSimple {
         if (isset($_POST['submit'])){
             // very simple check. We just make sure something is
             // added to title and content fields.
-            if (empty($_POST['title'])) self::$errors[] = lang::translate('blog_simple_no_title');
-            if (empty($_POST['content'])) self::$errors[] = lang::translate('blog_simple_no_content');
+            if (empty($_POST['title'])) {
+                self::$errors[] = lang::translate('blog_simple_no_title');
+            }
+            if (empty($_POST['content'])) {
+                self::$errors[] = lang::translate('blog_simple_no_content');
+            }
         }
     }
 
