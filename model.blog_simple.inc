@@ -134,10 +134,10 @@ class blogSimple {
             $filters = get_module_ini('blog_simple_filters');
 
             // we rewrite htmlentites
-            $_POST['title'] = htmlentities($_POST['title']);
+            $_POST = cos_htmlentities($_POST);
 
             // we run the content of our $_POST['content'] through all filters.
-            $_POST['content'] = get_filtered_content($filters, $_POST['content']);
+            //$_POST['content'] = get_filtered_content($filters, $_POST['content']);
         }
     }
 
