@@ -1,52 +1,78 @@
 <?php
 
-// view file for listing all entries by date.
-// 
-// As you may remember from the model file in the method
-// blogSimple::indexController()
-//
-// This was the method call used to get a string with latest entries.
-//
-// $str = get_include_contents(_COS_PATH . "/modules/blog_simple/views/index.inc", $rows);
-//
-// In this template all rows are transformed into the variable $vars
-//
-// a couple of new functions are used:
-//
-// create_link ($url, $title) // function that generates a html link
-// create_seo_title ($title) function that creates SEO friendly title from a string
-// substr2 ($text, $length) extracts a portion of the text specified by $length
+/**
+ * view file for listing all entries by updated date.
+ *
+ * In the mdoel we have the method blogSimple::indexController()
+ * which will list all entries in our blog.
+ *
+ * We used the template function get_include_contents()
+ * in this manner:
+ *
+ * $str = get_include_contents(_COS_PATH . "/modules/blog_simple/views/index.inc", $rows);
+ *
+ * In this template all rows are transformed into the variable $vars
+ *
+ * We also use a couple of standard functions, which all can be found in
+ * lib/common.inc
+ */
 
 foreach ($vars as $key => $row) {  
     
     $link_url = "/blog_simple/view/$row[id]/";
+
+    // we use the following standard function for transforming our
+    // url into a SEO frindly URL. my latest blog entry becomes
+    // my_latest_blog_entry
     $link_url.= create_seo_title($row['title']);
-    
+
+    // create link is also a standard function
+    // the function just returns a <a href="url">title</a>
+    // html link from a URL and a title
     $link = create_link($link_url, $row['title']);
-    
+
+    // we print headline for our blog entry
     echo "<h3>$link</h3>\n";
 
+    // we fetch some info about the user
     $user = blogSimple::getUserInfo($row['user_id']);
 
+    // we create a written by string
     $written_by = lang::translate('blog_simple_written_by') ;
     $written_by.= "<strong>";
+
+    // if any profile system is specified we will get a profile
+    // link. If not: Then the standard get_profile_link will just
+    // return a clear text version of the user name.
     $written_by.= get_profile_link($user);
     $written_by.= "</strong>";
 
+    // print to screen
     echo $writte_by;
 
+    // we create a easy to read string about time when entry
+    // was added or updated.
     $datetime = date_create($row['updated']);
     $date_formatted = date_format($datetime, register::$vars['coscms_main']['date_format_long']);
 
     echo "<strong>$date_formatted</strong>\n";
-    
+
+    // we fetch a module setting telling us how long our abstract
+    // should be
     $teaser_length = get_module_ini('blog_simple_abstract_length');
+
+    // we use the standard function substr2 to get our teaser of the entry
     $teaser = substr2($row['content'], $teaser_length, 3);
 
+    // print teaser to screen
     echo "<p>$teaser</p>\n";
 
+    // we check if user has access right to view admin options of this
+    // entry. (as a standard all access control function can be found
+    // in the session class located in lib/session.php
     $ret = session::checkAccessControl('blog_simple_allow', false);
 
+    // if access is ok we print some admin links.
     if ($ret){
         echo create_link("/blog_simple/edit/$row[id]", lang::translate('blog_simple_edit_entry'));
         echo "|";
