@@ -28,3 +28,4 @@ $_COS_LANG_MODULE['blog_simple_last_updated'] = 'Last Updated';
 $_COS_LANG_MODULE['blog_simple_no_title'] = 'No title';
 $_COS_LANG_MODULE['blog_simple_no_content'] = 'No content';
 
+
