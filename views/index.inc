@@ -44,11 +44,11 @@ foreach ($vars as $key => $row) {
     // if any profile system is specified we will get a profile
     // link. If not: Then the standard get_profile_link will just
     // return a clear text version of the user name.
-    $written_by.= get_profile_link($user);
+    $written_by.= " " . get_profile_link($user) . " ";
     $written_by.= "</strong>";
 
     // print to screen
-    echo $writte_by;
+    echo $written_by;
 
     // we create a easy to read string about time when entry
     // was added or updated.
@@ -75,7 +75,7 @@ foreach ($vars as $key => $row) {
     // if access is ok we print some admin links.
     if ($ret){
         echo create_link("/blog_simple/edit/$row[id]", lang::translate('blog_simple_edit_entry'));
-        echo "|";
+        echo " | ";
         echo create_link("/blog_simple/delete/$row[id]", lang::translate('blog_simple_delete_entry'));
     }
 }
