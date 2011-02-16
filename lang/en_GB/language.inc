@@ -9,8 +9,6 @@ $_COS_LANG_MODULE['blog_simple_delete_entry'] = 'Delete Entry';
 
 $_COS_LANG_MODULE['blog_simple_content'] = 'Content';
 $_COS_LANG_MODULE['blog_simple_delete_entry'] = 'Delete Entry';
-$_COS_LANG_MODULE['blog_simple_edit_entry'] = 'Edit Entry';
-$_COS_LANG_MODULE['blog_simple_add_entry'] = 'Add Entry';
 $_COS_LANG_MODULE['blog_simple_add_title'] = 'Title';
 $_COS_LANG_MODULE['blog_simple_entry_created'] = 'Entry Created';
 $_COS_LANG_MODULE['blog_simple_view_all'] = 'View List';

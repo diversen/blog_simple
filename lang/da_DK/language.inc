@@ -23,4 +23,3 @@ $_COS_LANG_MODULE['blog_simple_view_entry'] = 'blog_simple_view_entry';
 $_COS_LANG_MODULE['blog_simple_update_entry'] = 'blog_simple_update_entry';
 $_COS_LANG_MODULE['blog_simple_entry_updated'] = 'blog_simple_entry_updated';
 $_COS_LANG_MODULE['blog_simple_entry_deleted'] = 'blog_simple_entry_deleted';
-
