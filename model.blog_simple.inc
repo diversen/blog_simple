@@ -136,9 +136,6 @@ class blogSimple {
      */
     public static function sanitize(){
         if (isset($_POST['submit'])){
-            // All ini settings is loaded from the file called
-            // blog_simple.ini
-            $filters = get_module_ini('blog_simple_filters');
 
             // we rewrite htmlentites
             // cos_htmlentites is the same htmlentites, but this
@@ -196,7 +193,8 @@ class blogSimple {
             // if no errors
             if (empty(self::$errors)){
 
-                // add entry
+                // add entry, but decode htmlentities. 
+                $_POST = cos_htmlentities_decode($_POST);
                 $res = self::addEntry();
 
                 // if success in adding entry
@@ -366,6 +364,9 @@ class blogSimple {
             self::sanitize();
             if (empty(self::$errors)){
 
+                // add htmlentities again.
+                $_POST = cos_htmlentities_decode($_POST);
+
                 $res = self::updateEntry();
                 if ($res){
                     session::setActionMessage(
@@ -447,6 +448,7 @@ class blogSimple {
 
         // prepare and execute
         // insert the blog post
+
         $res = $db->insert('blog_simple', $values);
 
         // return boolean result from insert operation

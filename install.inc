@@ -19,3 +19,4 @@ $_INSTALL['MAIN_MENU_ITEM'] = array (
 
 // This sets the public clone URL
 $_INSTALL['PUBLIC_CLONE_URL'] = "git://github.com/diversen/blog_simple.git";
+$_INSTALL['PRIVATE_CLONE_URL'] = 'git@github.com:diversen/blog_simple.git';
