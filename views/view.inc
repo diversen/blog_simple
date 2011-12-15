@@ -10,18 +10,23 @@ echo "<p>\n";
 $user = blogSimple::getUserInfo($vars['user_id']);
 
 // compose written by string
-$written_by = lang::translate('blog_simple_written_by');
-$written_by.= " <strong>" . get_profile_link($user) . "</strong> ";
+// $written_by = lang::translate('blog_simple_written_by');
+// $written_by.= " <strong>" . get_profile_link($user) . "</strong> ";
 
 // echo written by
-echo $written_by;
+//echo $written_by;
 
 // compose formatted date as string
-$datetime = date_create($vars['updated']);
-$date_formatted = date_format($datetime, register::$vars['coscms_main']['date_format_long']);
+//$datetime = date_create($vars['updated']);
+//$date_formatted = date_format($datetime, register::$vars['coscms_main']['date_format_long']);
 
 // echo formatted date
-echo "<strong>$date_formatted</strong>";
+//echo "<strong>$date_formatted</strong>";
+
+$unix_stamp = strtotime($vars['updated']);
+$date = strftime(get_main_ini('date_format_long'), $unix_stamp);
+        
+echo session::getProfileSimple($vars['user_id'], $date);
 
 // echo content
 echo $vars['content'];

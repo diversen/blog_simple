@@ -37,25 +37,20 @@ foreach ($vars as $key => $row) {
     // we fetch some info about the user
     $user = blogSimple::getUserInfo($row['user_id']);
 
-    // we create a written by string
-    $written_by = lang::translate('blog_simple_written_by') ;
-    $written_by.= "<strong>";
-
-    // if any profile system is specified we will get a profile
-    // link. If not: Then the standard get_profile_link will just
-    // return a clear text version of the user name.
-    $written_by.= " " . get_profile_link($user) . " ";
-    $written_by.= "</strong>";
+    $unix_stamp = strtotime($row['updated']);
+    $date = strftime(get_main_ini('date_format_long'), $unix_stamp);
+        
+    echo session::getProfileSimple($row['user_id'], $date);
 
     // print to screen
-    echo $written_by;
+    //echo $written_by;
 
     // we create a easy to read string about time when entry
     // was added or updated.
-    $datetime = date_create($row['updated']);
-    $date_formatted = date_format($datetime, register::$vars['coscms_main']['date_format_long']);
+    //$datetime = date_create($row['updated']);
+    //$date_formatted = date_format($datetime, register::$vars['coscms_main']['date_format_long']);
 
-    echo "<strong>$date_formatted</strong>\n";
+    //echo "<strong>$date_formatted</strong>\n";
 
     // we fetch a module setting telling us how long our abstract
     // should be
