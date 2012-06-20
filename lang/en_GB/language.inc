@@ -10,10 +10,10 @@ $_COS_LANG_MODULE['blog_simple_delete_entry'] = 'Delete Entry';
 // Translation of file /home/dennis/www/coscms/modules/blog_simple/model.blog_simple.inc
 
 $_COS_LANG_MODULE['blog_simple_title'] = 'My Title';
-$_COS_LANG_MODULE['blog_simple_content'] = 'Blog Content';
+$_COS_LANG_MODULE['blog_simple_entry'] = 'Blog entry';
 $_COS_LANG_MODULE['blog_simple_add_entry'] = 'Add Entry';
 $_COS_LANG_MODULE['blog_simple_no_title'] = 'No Title';
-$_COS_LANG_MODULE['blog_simple_no_content'] = 'No Content';
+$_COS_LANG_MODULE['blog_simple_no_entry'] = 'No entry';
 $_COS_LANG_MODULE['blog_simple_add_title'] = 'Add Entry';
 $_COS_LANG_MODULE['blog_simple_entry_created'] = 'Entry Created';
 $_COS_LANG_MODULE['blog_simple_view_all'] = 'View All';

@@ -55,60 +55,49 @@ class blogSimple {
      */
     public static function blogForm($method, $id = null, $values = array()){
 
-        // We include mysqlForm.php which is easy to use for creating forms connected
-        // to a database. You don't need to use this class when you make your
+        include_once "form_helpers.php";
+        // we use html.php  from emthods, which is easy to use for creating forms connected
+        // You don't need to use this class when you make your
         // modules. In fact you could use the Zend Form, Your own form class, or just write
         // the form as HTML and place it somewhere in the module dir.
         //
         // Though: For the uniform look and feel of a form, using these class makes it
         // quite easy to manipulate looks of the forms in the template.
 
-        include_once "mySqlForm.php";
-        // This is the forms fields captions
-        // As you can see we make our module language aware,
-        // so we can easily translate the module strings into other languages
-        $fields_captions =
-            array(
-                // lang::translate translates into language
-                // set in config/config.ini
-                'title' => lang::translate('blog_simple_title'),
-                'content' => lang::translate('blog_simple_content'),
-        );
-
-        // which fields do we use of the db table
-        $fields = array('id', 'title', 'content');
-
-        // Init the form object with fields and specify which
-        // table to use for our form. 'blog_simple' was the
-        // name of the blog_simple db table. Fields is which
-        // fields to make input fields for. And values is
-        // only used if form is used for doing update
-
-        $tf = new mySqlForm('blog_simple', $fields, $values);
-
-        // we also set the labels for the form as specified above.
-        $tf->setLabels($fields_captions);
-
+        
         
         if (isset($id)){
             // if an id is set if update or delete
-            $tf->setMethod($method, $id);
+            //$tf->setMethod($method, $id);
             if ($method == 'delete'){
-                // set correct caption for form.
-                $caption = lang::translate('blog_simple_delete_entry');
+                //$helper = new formHelpers();
+                echo formHelpers::confirmDeleteForm(
+                        lang::translate('blog_simple_delete_entry'));
+                return;
             } else {
-                $caption = lang::translate('blog_simple_edit_entry');
+                // edit
+                // select one (the same syntax as the above method, but this time
+        // params ('table' 'fields to fetch' simple search e.g. array('id' => 123),
+                $db = new db();
+                $values = $db->selectOne('blog_simple', 'id', self::getEntryId());
+                $values = html::specialEncode($values);
+                $legend = lang::translate('blog_simple_edit_entry');
             }
         } else {
-            // else it is insert
-            $tf->setMethod($method);
-            // set correct caption
-            $caption = lang::translate('blog_simple_add_entry');
+            $legend = lang::translate('blog_simple_add_entry');
         }
 
-        // print the form
-        $tf->createForm('', 'post',  'blog_simple form', '',
-                           true,  $caption);
+        $form = new html();
+        $form->formStart();
+        $form->init($values, 'submit');
+        $form->legend($legend);
+        $form->label('title', lang::translate('blog_simple_title'));
+        $form->text('title');
+        $form->label('entry', lang::translate('blog_simple_title'));
+        $form->textarea('entry');
+        $form->submit('submit', lang::system('submit'));
+        $form->formEnd();
+        echo $form->getStr();
     }
 
 
@@ -119,12 +108,12 @@ class blogSimple {
     public static function validate(){
         if (isset($_POST['submit'])){
             // very simple check. We just make sure something is
-            // added to title and content fields.
+            // added to title and entry fields.
             if (empty($_POST['title'])) {
                 self::$errors[] = lang::translate('blog_simple_no_title');
             }
-            if (empty($_POST['content'])) {
-                self::$errors[] = lang::translate('blog_simple_no_content');
+            if (empty($_POST['entry'])) {
+                self::$errors[] = lang::translate('blog_simple_no_entry');
             }
         }
     }
@@ -140,7 +129,7 @@ class blogSimple {
             // we rewrite htmlentites
             // cos_htmlentites is the same htmlentites, but this
             // function works on arrays too.
-            $_POST = cos_htmlentities($_POST);
+            $_POST = html::specialEncode($_POST);
 
         }
     }
@@ -194,7 +183,7 @@ class blogSimple {
             if (empty(self::$errors)){
 
                 // add entry, but decode htmlentities. 
-                $_POST = cos_htmlentities_decode($_POST);
+                $_POST = html::specialDecode($_POST);
                 $res = self::addEntry();
 
                 // if success in adding entry
@@ -261,38 +250,27 @@ class blogSimple {
 
         include_once "pearPager.php";
 
-        // we use our db class to create a db object.
-        $db = new db();
-
         // get a count of all rows in blog_simple_table
-        $num_rows = $db->getNumRows('blog_simple');
+        $num_rows = dbQ::setSelectNumRows('blog_simple')->
+                fetch();
 
         // all you need to tell pearPager object is the count of all numRows
         $pager = new pearPager($num_rows);
 
-        // we select all and specify the ordering and the from and limit of the query.
-        //
-        // @param 'table'    (blog_simple)
-        // @param fields     (array of fields) or null == ALL (*)
-        // @param 'searh'    (e.g array ('user_id' => 1) or NULL (no search)
-        // @param 'from'     (where in the row count to start our select)
-        // @param 'limit'    (what is the limit
-        // @param 'order_by' (which field do we order our select by) ==
-
-        $rows = $db->selectAll('blog_simple', null, null, $pager->from, PAGER_PER_PAGE, 'updated');
+        // select with queryBuilder - a simple ORM
+        $rows = dbQ::setSelect('blog_simple')->
+                order('updated')->
+                limit($pager->from, PAGER_PER_PAGE)->
+                fetch();
 
         // simple template view file 'index.inc' parses all rows
         // and returns a string containing our list of blog entries.
         // it just uses php as a template engine.
         // we will look at this template in the next part of the tutorial
         // all you need to know for now is that we just pass all selected
-        // rows to the template
+        // rows to the template placed in blog_simple/modules/views
         
-        $str = get_include_contents(_COS_PATH . "/modules/blog_simple/views/index.inc", $rows);
-
-        // In return we get a string.
-        // we echo the string for display to screen
-        echo $str;
+        echo view::get('blog_simple', 'index', $rows);
 
         // and we print the pagination data.
         $pager->pearPage();
@@ -319,7 +297,7 @@ class blogSimple {
 
         // select one (the same syntax as the above method, but this time
         // params ('table' 'fields to fetch' simple search e.g. array('id' => 123),
-        $row = $db->selectOne('blog_simple', null, array ('id' => self::getEntryId()));
+        $row = $db->selectOne('blog_simple', 'id', self::getEntryId());
 
         // we set a html title for the page where this method is used
         template::setTitle(lang::translate('blog_simple_view_entry') . " :: $row[title]");
@@ -328,13 +306,13 @@ class blogSimple {
         // markdown (located in modules/filter_markdown/markdown.inc)
         $filters = get_module_ini('blog_simple_filters');
 
-        // we filter content with a helper function called get_filtered_content
-        // which filters content with all filters specified in the array $filters
-        $row['content'] = get_filtered_content($filters, $row['content']);
+        // we filter content with a helper function called get_filtered_entry
+        // which filters entry with all filters specified in the array $filters
+        $row['entry'] = get_filtered_content($filters, $row['entry']);
 
         // and we use our simple template function for getting the string
         // this time our template is located in views/view.inc
-        $str = get_include_contents(_COS_PATH . "/modules/blog_simple/views/view.inc", $row);
+        $str = view::get('blog_simple', 'view', $row);
         
         // At at last we echo the string
         echo $str;
@@ -365,7 +343,7 @@ class blogSimple {
             if (empty(self::$errors)){
 
                 // add htmlentities again.
-                $_POST = cos_htmlentities_decode($_POST);
+                $_POST = html::specialDecode($_POST);
 
                 $res = self::updateEntry();
                 if ($res){
@@ -487,18 +465,5 @@ class blogSimple {
         $db = new db();
         $res = $db->delete('blog_simple', 'id', self::getEntryId());
         return $res;
-    }
-
-    /**
-     * method for getting user info
-     * this is only used in the templates as we will see in the next session
-     * 
-     * @param   int     $id
-     * @return  array   account row
-     */
-    public static function getUserInfo ($id){
-        $db = new db();       
-        $row = $db->selectOne('account', 'id', $id);
-        return $row;
     }
 }

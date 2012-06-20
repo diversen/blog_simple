@@ -20,28 +20,14 @@
 foreach ($vars as $key => $row) {  
     
     $link_url = "/blog_simple/view/$row[id]/";
-
-    // we use the following standard function for transforming our
-    // url into a SEO frindly URL. my latest blog entry becomes
-    // my_latest_blog_entry
-    $link_url.= create_seo_title($row['title']);
-
-    // create link is also a standard function
-    // the function just returns a <a href="url">title</a>
-    // html link from a URL and a title
-    $link = create_link($link_url, $row['title']);
+    $link_url.= strings::utf8SlugString($row['title']);
+    $link = html::createLink($link_url, $row['title']);
 
     // we print headline for our blog entry
-    echo "<h3>$link</h3>\n";
+    headline_message ($link);
 
-    // we fetch some info about the user
-    $user = blogSimple::getUserInfo($row['user_id']);
-
-    $unix_stamp = strtotime($row['updated']);
-    $date = strftime(get_main_ini('date_format_long'), $unix_stamp);
-        
-    echo session::getProfileSimple($row['user_id'], $date);
-
+    $date = time::getDateString($row['updated']);
+    echo user::getProfileSimple($row['user_id'], $date);
     // print to screen
     //echo $written_by;
 
@@ -57,7 +43,7 @@ foreach ($vars as $key => $row) {
     $teaser_length = get_module_ini('blog_simple_abstract_length');
 
     // we use the standard function substr2 to get our teaser of the entry
-    $teaser = substr2($row['content'], $teaser_length, 3);
+    $teaser = strings::substr2($row['entry'], $teaser_length, 3);
 
     // print teaser to screen
     echo "<p>$teaser</p>\n";
@@ -69,8 +55,8 @@ foreach ($vars as $key => $row) {
 
     // if access is ok we print some admin links.
     if ($ret){
-        echo create_link("/blog_simple/edit/$row[id]", lang::translate('blog_simple_edit_entry'));
-        echo " | ";
-        echo create_link("/blog_simple/delete/$row[id]", lang::translate('blog_simple_delete_entry'));
+        echo html::createLink("/blog_simple/edit/$row[id]", lang::translate('blog_simple_edit_entry'));
+        echo MENU_SUB_SEPARATOR;
+        echo html::createLink("/blog_simple/delete/$row[id]", lang::translate('blog_simple_delete_entry'));
     }
 }
