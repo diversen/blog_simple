@@ -1,32 +1,16 @@
 <?php
 
-// print title
+// echo title
 headline_message($vars['title']);
 
 // start paragraph
 echo "<p>\n";
 
-// get user info for this blog entry
-//$user = blogSimple::getUserInfo($vars['user_id']);
-
-// compose written by string
-// $written_by = lang::translate('blog_simple_written_by');
-// $written_by.= " <strong>" . get_profile_link($user) . "</strong> ";
-
-// echo written by
-//echo $written_by;
-
 // compose formatted date as string
 // $datetime = strtotime($vars['updated']);
 $date_formatted = time::getDateString($vars['updated']);
 
-// echo formatted date
-//echo "<strong>$date_formatted</strong>";
-
-//$unix_stamp = strtotime($vars['updated']);
-//$date = strftime(get_main_ini('date_format_long'), $unix_stamp);
-  
-//user::getProfileSimple($user, $date);
+// get simple profile
 echo user::getProfileSimple($vars['user_id'], $date_formatted);
 
 // echo entry

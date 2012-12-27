@@ -28,15 +28,6 @@ foreach ($vars as $key => $row) {
 
     $date = time::getDateString($row['updated']);
     echo user::getProfileSimple($row['user_id'], $date);
-    // print to screen
-    //echo $written_by;
-
-    // we create a easy to read string about time when entry
-    // was added or updated.
-    //$datetime = date_create($row['updated']);
-    //$date_formatted = date_format($datetime, register::$vars['coscms_main']['date_format_long']);
-
-    //echo "<strong>$date_formatted</strong>\n";
 
     // we fetch a module setting telling us how long our abstract
     // should be

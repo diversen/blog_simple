@@ -55,7 +55,7 @@ class blogSimple {
      */
     public static function blogForm($method, $id = null, $values = array()){
 
-        include_once "form_helpers.php";
+        include_once "coslib/form_helpers.php";
         // we use html.php  from emthods, which is easy to use for creating forms connected
         // You don't need to use this class when you make your
         // modules. In fact you could use the Zend Form, Your own form class, or just write
@@ -64,20 +64,17 @@ class blogSimple {
         // Though: For the uniform look and feel of a form, using these class makes it
         // quite easy to manipulate looks of the forms in the template.
 
-        
-        
         if (isset($id)){
             // if an id is set if update or delete
-            //$tf->setMethod($method, $id);
             if ($method == 'delete'){
-                //$helper = new formHelpers();
+                // simple delete form
                 echo formHelpers::confirmDeleteForm(
                         lang::translate('blog_simple_delete_entry'));
                 return;
             } else {
-                // edit
+                // edit form
                 // select one (the same syntax as the above method, but this time
-        // params ('table' 'fields to fetch' simple search e.g. array('id' => 123),
+                // params ('table' 'fields to fetch' simple search e.g. array('id' => 123),
                 $db = new db();
                 $values = $db->selectOne('blog_simple', 'id', self::getEntryId());
                 $values = html::specialEncode($values);
@@ -186,17 +183,12 @@ class blogSimple {
                 $_POST = html::specialDecode($_POST);
                 $res = self::addEntry();
 
-                // if success in adding entry
+                // if success in adding entry - redirect
                 if ($res){
-
-                    // set action /or flash message (special message to inform
-                    // the user when page has been redirected.
-                    session::setActionMessage(
-                        // message on success is:
-                        lang::translate('blog_simple_entry_created')
-                    );
-                    // redirect to index page
-                    header("Location: /blog_simple/index");
+                    http::locationHeader(
+                            "/blog_simple/index",
+                            lang::translate('blog_simple_entry_created')
+                            );
                 }
             // if errors we display the erros
             } else {
@@ -242,20 +234,20 @@ class blogSimple {
         //
         // Note: It is set before pearPager.
         // otherwise it will be defined in pearPager.php with a value of 10
-        define('PAGER_PER_PAGE' , get_module_ini('blog_simple_per_page'));
+        $per_page = config::getModuleIni('blog_simple_per_page');
 
         // we include pear pager, which is a wrapper class around the
         // PEAR_Pager class. We use include_once because maybe some
         // other module has already included the file.
 
-        include_once "pearPager.php";
+        include_once "coslib/pearPager.php";
 
         // get a count of all rows in blog_simple_table
         $num_rows = dbQ::setSelectNumRows('blog_simple')->
                 fetch();
 
         // all you need to tell pearPager object is the count of all numRows
-        $pager = new pearPager($num_rows);
+        $pager = new pearPager($num_rows, $per_page);
 
         // select with queryBuilder - a simple ORM
         $rows = dbQ::setSelect('blog_simple')->
@@ -342,26 +334,22 @@ class blogSimple {
             self::sanitize();
             if (empty(self::$errors)){
 
-                // add htmlentities again.
+                // decode htmlentities again.
                 $_POST = html::specialDecode($_POST);
-
                 $res = self::updateEntry();
                 if ($res){
-                    session::setActionMessage(
-                        lang::translate('blog_simple_entry_updated')
-                    );
-                    header("Location: /blog_simple/index");
+                    // redirect and set action message
+                    // which will be displayed on next page.
+                    http::locationHeader(
+                            '/blog_simple/index', 
+                            lang::translate('blog_simple_entry_updated'));
                 }
             } else {
                 view_form_errors(self::$errors);
-                self::blogForm('update', self::getEntryId());
+                
             }
-        } else {
-            // no submisstion show blog entry form
-            // the form will set correct values if form has
-            // been submitted
-            self::blogForm('update', self::getEntryId());
         }
+        self::blogForm('update', self::getEntryId());
     }
 
 
@@ -386,13 +374,12 @@ class blogSimple {
         // if any a form is submitted we check for errors and add the
         // the entry
         if (isset($_POST['submit'])){
-
             $res = self::deleteEntry();
             if ($res){
-                session::setActionMessage(
-                    lang::translate('blog_simple_entry_deleted')
-                );
-                header("Location: /blog_simple/index");
+                http::locationHeader(
+                        "/blog_simple/index",
+                        lang::translate('blog_simple_entry_deleted')
+                    );
             }
         } else {
             // no submisstion show blog entry form
