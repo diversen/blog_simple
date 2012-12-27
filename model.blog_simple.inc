@@ -67,8 +67,9 @@ class blogSimple {
         if (isset($id)){
             // if an id is set if update or delete
             if ($method == 'delete'){
-                // simple delete form
-                echo formHelpers::confirmDeleteForm(
+                //$helper = new formHelpers();
+                echo formHelpers::confirmDeleteForm('submit',
+
                         lang::translate('blog_simple_delete_entry'));
                 return;
             } else {
@@ -373,13 +374,17 @@ class blogSimple {
 
         // if any a form is submitted we check for errors and add the
         // the entry
+
         if (isset($_POST['submit'])){
             $res = self::deleteEntry();
+            
             if ($res){
+
                 http::locationHeader(
                         "/blog_simple/index",
                         lang::translate('blog_simple_entry_deleted')
                     );
+
             }
         } else {
             // no submisstion show blog entry form
