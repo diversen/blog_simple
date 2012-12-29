@@ -3,13 +3,9 @@
 /**
  * view file for listing all entries by updated date.
  *
- * In the mdoel we have the method blogSimple::indexController()
+ * In the model we have the method blogSimple::indexController()
  * which will list all entries in our blog.
  *
- * We used the template function get_include_contents()
- * in this manner:
- *
- * $str = get_include_contents(_COS_PATH . "/modules/blog_simple/views/index.inc", $rows);
  *
  * In this template all rows are transformed into the variable $vars
  *
