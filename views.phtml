@@ -5,21 +5,13 @@ function blog_simple_view_index ($vars) {
     /**
      * view file for listing all entries by updated date.
      *
-     * In the mdoel we have the method blogSimple::indexController()
-     * which will list all entries in our blog.
-     *
-     * We used the template function get_include_contents()
-     * in this manner:
-     *
-     * $str = get_include_contents(_COS_PATH . "/modules/blog_simple/views/index.inc", $rows);
-     *
      * In this template all rows are transformed into the variable $vars
      *
      * We also use a couple of standard functions, which all can be found in
-     * lib/common.inc
+     * coslib/common.inc
      */
 
-    foreach ($vars as $key => $row) {  
+    foreach ($vars as $row) {  
 
         $link_url = "/blog_simple/view/$row[id]/";
         $link_url.= strings::utf8SlugString($row['title']);
