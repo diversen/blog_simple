@@ -45,8 +45,7 @@ class blogSimple {
         // an ID identifying the id of the blog post when we will read,
         // update or delete a post.
         //
-        // in this sense our url will look like this, e.g:
-	// blog_simple/index/123
+        // in this sense our url will look like this, e.g: blog_simple/index/123
         //
         // Note: The controllers are just files placed in the module dir
         // index.php refers to the 'index' part of the url.
@@ -65,7 +64,6 @@ class blogSimple {
      */
     public static function blogForm($method, $id = null, $values = array()){
 
-        include_once "coslib/form_helpers.php";
         // we use html.php  from emthods, which is easy to use for creating 
         // forms connected to a database
         // 
