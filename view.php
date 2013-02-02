@@ -33,7 +33,7 @@ class blogSimplView extends blogSimple {
 
         // we filter content with a helper function called get_filtered_entry
         // which filters entry with all filters specified in the array $filters
-        $row['entry'] = get_filtered_content($filters, $row['entry']);
+        $row['entry'] = moduleloader::getFilteredContent($filters, $row['entry']);
 
         // call the 'view' function
         blog_simple_view_entry($row);
