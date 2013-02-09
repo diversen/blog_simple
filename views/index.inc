@@ -20,7 +20,7 @@ foreach ($vars as $key => $row) {
     $link = html::createLink($link_url, $row['title']);
 
     // we print headline for our blog entry
-    headline_message ($link);
+    html::headline ($link);
 
     $date = time::getDateString($row['updated']);
     echo user::getProfileSimple($row['user_id'], $date);

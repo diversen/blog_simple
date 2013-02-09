@@ -37,7 +37,7 @@ class blogSimpleUpdate extends blogSimple {
                             lang::translate('blog_simple_entry_updated'));
                 }
             } else {
-                view_form_errors(self::$errors);
+                html::errors(self::$errors);
                 
             }
         }

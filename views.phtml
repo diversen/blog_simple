@@ -18,7 +18,7 @@ function blog_simple_view_index ($vars) {
         $link = html::createLink($link_url, $row['title']);
 
         // we print headline for our blog entry
-        headline_message ($link);
+        html::headline ($link);
 
         $date = time::getDateString($row['updated']);
         echo user::getProfileSimple($row['user_id'], $date);
@@ -50,7 +50,7 @@ function blog_simple_view_index ($vars) {
 function blog_simple_view_entry ($vars) {
     
     // echo title
-    headline_message($vars['title']);
+    html::headline($vars['title']);
 
     // start paragraph
     echo "<p>\n";

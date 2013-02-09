@@ -64,7 +64,7 @@ class blogSimpleAdd extends blogSimple {
             } else {
                 // we use the view_form_errors, which is one of several
                 // helper functions which can be added to a template file.
-                view_form_errors(self::$errors);
+                html::errors(self::$errors);
 
                 // display form after errors
                 self::blogForm('insert');

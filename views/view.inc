@@ -1,7 +1,7 @@
 <?php
 
 // echo title
-headline_message($vars['title']);
+html::headline($vars['title']);
 
 // start paragraph
 echo "<p>\n";
