@@ -10,7 +10,9 @@ $_INSTALL['VERSION'] = 1.7;
 
 // This creates a main menu item in the database
 $_INSTALL['MAIN_MENU_ITEM'] = array (
-    'title' => 'blog_simple_title',
+    // menu items are not translated before being inserted in menus table
+    // therefor the 3. param with ('no_translate' => true)
+    'title' => lang::translate('blog_simple_title', null, array ('no_translate' => true)),
     'url' => '/blog_simple/index',
     'module_name' => 'blog_simple',
     'parent' => 0,

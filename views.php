@@ -64,9 +64,6 @@ class blog_simple_views {
         
         html::headline(html::specialEncode($vars['title']));
 
-        // start paragraph
-        echo "<p>\n";
-
         // compose formatted date as string
         // $datetime = strtotime($vars['updated']);
         $date_formatted = time::getDateString($vars['updated']);
