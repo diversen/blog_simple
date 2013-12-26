@@ -17,7 +17,7 @@ $_MODULE_MENU[] = array(
 // which we get from an ini setting. We will see this ini
 // file in the next section of the tutorial.
 
-$blog_simple_allow = get_module_ini('blog_simple_allow');
+$blog_simple_allow = config::getModuleIni('blog_simple_allow');
 
 // we add a menu entry for adding entries. Again it is just
 // a link with URL and title, but notice that we set an auth
