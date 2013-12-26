@@ -22,7 +22,7 @@ class blog_simple {
      * A simple static variable holding error codes and messages.
      * @var array   array for holding error codes
      */
-    public static $errors = array();
+    public $errors = array();
 
 
     /**
