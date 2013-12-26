@@ -34,14 +34,14 @@ class blogSimpleIndex extends blogSimple {
         include_once "coslib/pearPager.php";
 
         // get a count of all rows in blog_simple_table
-        $num_rows = dbQ::setSelectNumRows('blog_simple')->
+        $num_rows = db_q::numRows('blog_simple')->
                 fetch();
 
         // all you need to tell pearPager object is the count of all numRows
         $pager = new pearPager($num_rows, $per_page);
 
         // select with queryBuilder - a simple ORM
-        $rows = dbQ::setSelect('blog_simple')->
+        $rows = db_q::select('blog_simple')->
                 order('updated')->
                 limit($pager->from, $per_page)->
                 fetch();

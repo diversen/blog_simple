@@ -78,7 +78,7 @@ class blogSimple {
             // if an id is set if update or delete
             if ($method == 'delete'){
                 //$helper = new formHelpers();
-                echo formHelpers::confirmDeleteForm('submit',
+                echo html_helpers::confirmDeleteForm('submit',
 
                         lang::translate('blog_simple_delete_entry'));
                 return;
