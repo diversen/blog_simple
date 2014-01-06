@@ -9,7 +9,7 @@
 // to controller files. index refers to index.php in our
 // module folder
 $_MODULE_MENU[] = array(
-    'title' => lang::translate('blog_simple_menu_list'),
+    'title' => lang::translate('View all'),
     'url' => '/blog_simple/index',
 );
 
@@ -26,7 +26,7 @@ $blog_simple_allow = config::getModuleIni('blog_simple_allow');
 // users who will see this link. Anybody else does not need to
 // see this link.
 $_MODULE_MENU[] = array(
-    'title' => lang::translate('blog_simple_menu_add'),
+    'title' => lang::translate('Add'),
     'url' => '/blog_simple/add',
     // note that we have set an auth element!
     'auth' => $blog_simple_allow

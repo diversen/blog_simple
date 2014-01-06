@@ -31,21 +31,26 @@ class blog_simple_views {
 
             // print teaser to screen
             echo "<p>$teaser</p>\n";
-
-            // we check if user has access right to view admin options of this
-            // entry. (as a standard all access control function can be found
-            // in the session class located in lib/session.php
-            $ret = session::checkAccessControl('blog_simple_allow', false);
-
-            // if access is ok we print some admin links.
-            if ($ret){
-                echo html::createLink("/blog_simple/edit/$row[id]", lang::translate('blog_simple_edit_entry'));
-                echo MENU_SUB_SEPARATOR;
-                echo html::createLink("/blog_simple/delete/$row[id]", lang::translate('blog_simple_delete_entry'));
-            }
+            self::displayEditOptions ($row);
         }     
     }
     
+    public static function displayEditOptions($row) {
+        // we check if user has access right to view admin options of this
+        // entry. (as a standard all access control function can be found
+        // in the session class located in lib/session.php
+        $ret = session::checkAccessControl('blog_simple_allow', false);
+
+        // if access is ok we print some admin links.
+        if ($ret) {
+            echo html::createLink(
+                    "/blog_simple/edit/$row[id]", lang::translate('Edit'));
+            echo MENU_SUB_SEPARATOR;
+            echo html::createLink(
+                    "/blog_simple/delete/$row[id]", lang::translate('Delete'));
+        }
+    }
+
     /**
      * view for view action
      * @param array $vars
@@ -59,7 +64,9 @@ class blog_simple_views {
 
         // we filter content with a helper function called get_filtered_entry
         // which filters entry with all filters specified in the array $filters
-        $vars['entry'] = moduleloader::getFilteredContent($filters, $vars['entry']);
+        $vars['entry'] = moduleloader::getFilteredContent(
+                $filters, 
+                $vars['entry']);
         
         
         html::headline(html::specialEncode($vars['title']));
@@ -74,12 +81,7 @@ class blog_simple_views {
         // echo entry
         echo $vars['entry'];
 
-        // check if it is an amdin user and add edit options
-        $ret = session::checkAccessControl('blog_simple_allow', false);
-        if ($ret) {
-            echo html::createLink("/blog_simple/edit/$vars[id]", lang::translate('blog_simple_edit_entry'));
-            echo MENU_SUB_SEPARATOR;
-            echo html::createLink("/blog_simple/delete/$vars[id]", lang::translate('blog_simple_delete_entry'));
-        }
+        // display edit options
+        self::displayEditOptions($vars);
     }
 }

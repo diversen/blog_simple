@@ -1,11 +1,9 @@
 <?php
 
-
 // Translation of file /modules/blog_simple/install.inc
 
-$_COS_LANG_MODULE['blog_simple_title'] = 'My Blog';
-
+$_COS_LANG_MODULE['My blog'] = 'My blog';
 // Translation of file /modules/blog_simple/menu.inc
 
-$_COS_LANG_MODULE['blog_simple_menu_list'] = 'List All Entries';
-$_COS_LANG_MODULE['blog_simple_menu_add'] = 'Add Entry';
+$_COS_LANG_MODULE['View all'] = 'View all';
+$_COS_LANG_MODULE['Add'] = 'Add';

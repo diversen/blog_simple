@@ -1,25 +1,22 @@
 <?php
 
 /**
- * This is our module file. 
- */
-
-/**
  * First thing is a nice trick
  * . 
  * when making the next call we make it possible for all 'views' to be 
  * overriden in a template. 
  * 
- * All views in this example are just functions calls, which makes it easy to navigate
- * in e.g. and IDE (like netbeans). You could also place views in a view folder 
- * and call them there - but this is what I prefer. 
+ * All views in this example are just functions calls, 
+ * which makes it easy to navigate in e.g. and IDE (like netbeans). 
+ * You could also place views in a view folder and call them there - 
+ * but this is what I prefer. 
  */
 view::includeOverrideFunctions('blog_simple', 'views.php');
 
 class blog_simple {
 
     /**
-     * A simple static variable holding error codes and messages.
+     * variable holding error codes and messages.
      * @var array   array for holding error codes
      */
     public $errors = array();
@@ -27,7 +24,7 @@ class blog_simple {
 
     /**
      * method for getting a filtered entry id.
-     * @return int  returns filtered int
+     * @return int  $int returns filtered int
      */
     public function getEntryId (){
 
@@ -37,7 +34,8 @@ class blog_simple {
         // an ID identifying the id of the blog post when we will read,
         // update or delete a post.
         //
-        // in this sense our url will look like this, e.g: blog_simple/index/123
+        // in this sense our url will look something like this: 
+        // blog_simple/index/123
         //
         $id = uri::fragment(2);
         
@@ -61,7 +59,8 @@ class blog_simple {
         // forms connected to a database
         // 
         // You don't need to use this class when you make your
-        // modules. In fact you could use the Zend Form, Your own form class, or just write
+        // modules. In fact you could use the Zend Form, 
+        // Your own form class, or just write
         // the form as HTML and place it somewhere in the module dir.
         //
         // Though: For the uniform look and feel of a form, using these class 
@@ -70,10 +69,10 @@ class blog_simple {
         if (isset($id)){
             // if an id is set if update or delete
             if ($method == 'delete'){
-                //$helper = new formHelpers();
+                
+                // simple helper to displat a delete form
                 echo html_helpers::confirmDeleteForm('submit',
-
-                        lang::translate('blog_simple_delete_entry'));
+                        lang::translate('Delete entry'));
                 return;
             } else {
                 // edit form
@@ -82,21 +81,25 @@ class blog_simple {
                 $db = new db();
                 $values = $db->selectOne('blog_simple', 'id', self::getEntryId());
                 $values = html::specialEncode($values);
-                $legend = lang::translate('blog_simple_edit_entry');
+                $legend = lang::translate('Edit entry');
             }
         } else {
-            $legend = lang::translate('blog_simple_add_entry');
+            $legend = lang::translate('Add entry');
         }
 
         $form = new html();
         $form->formStart();
+        
+        // form will use submitted variables
+        // if $_POST['submit'] is set
+        
         $form->init($values, 'submit');
         $form->legend($legend);
-        $form->label('title', lang::translate('blog_simple_title'));
+        $form->label('title', lang::translate('Title'));
         $form->text('title');
-        $form->label('entry', lang::translate('blog_simple_title'));
+        $form->label('entry', lang::translate('Entry'));
         $form->textarea('entry');
-        $form->submit('submit', lang::system('submit'));
+        $form->submit('submit', lang::translate('Submit'));
         $form->formEnd();
         echo $form->getStr();
     }
@@ -111,10 +114,10 @@ class blog_simple {
             // very simple check. We just make sure something is
             // added to title and entry fields.
             if (empty($_POST['title'])) {
-                $this->errors[] = lang::translate('blog_simple_no_title');
+                $this->errors[] = lang::translate('No title');
             }
             if (empty($_POST['entry'])) {
-                $this->errors[] = lang::translate('blog_simple_no_entry');
+                $this->errors[] = lang::translate('No entry');
             }
         }
     }
@@ -126,7 +129,6 @@ class blog_simple {
      */
     public function sanitize(){
         if (isset($_POST['submit'])){
-
             // we rewrite htmlentites
             $_POST = html::specialEncode($_POST);
 
@@ -195,7 +197,7 @@ class blog_simple {
         return $res;
     }
     
-            /**
+    /**
      * method for listing latest entries in our blog
      *
      * the controller file is placed in top of our module dir, and
@@ -203,16 +205,11 @@ class blog_simple {
      *
      * blog_simple/index
      *
-     * the index file will only contain the following static
-     * method call:
-     *
-     * blogSimpleIndex::indexController()
-     *
      */
     public function indexAction (){
 
-        // set title
-        template::setTitle(lang::translate('blog_simple_view_all'));
+        // set title of html document
+        template::setTitle(lang::translate('View all blog entries'));
 
         // We define how many items we want to show per page.
         // This is defined in our ini file.
@@ -237,17 +234,10 @@ class blog_simple {
         // encode rows
         $rows = html::specialEncode($rows);
         
-        // simple template view file 'index.inc' parses all rows
-        // and returns a string containing our list of blog entries.
-        // it just uses php as a template engine.
-        // we will look at this template in the next part of the tutorial
-        // all you need to know for now is that we just pass all selected
-        // rows to the template placed in blog_simple/modules/views
+        // display the rows
+        // see: views.php
         
         blog_simple_views::index($rows);
-        
-        // same thing with a view file: see views/index
-        //echo view::get('blog_simple', 'index', $rows);
 
         // and we print the pagination data.
         echo $pager->getPagerHTML();
@@ -257,14 +247,11 @@ class blog_simple {
     /**
      * method for listing single full entry of our blog
      *
-     * the method call will be used in the file
-     * blog_simple/view.php
-     *
      * it displays a full blog entry in this style , e.g.:
      *
      * blog_simple/view/123
      *
-     * which will get us blog entry number 123 and display it
+     * which will display the blog entry 123 and display it
      * for the reader
      *
      */
@@ -273,12 +260,17 @@ class blog_simple {
         // create a db object
         $db = new db();
 
-        // select one (the same syntax as the above method, but this time
-        // params ('table' 'fields to fetch' simple search e.g. array('id' => 123),
-        $row = $db->selectOne('blog_simple', 'id', self::getEntryId());
+        // select one 
+        $row = $db->selectOne(
+                'blog_simple', 
+                'id', 
+                self::getEntryId());
 
         // we set a html title for the page where this method is used
-        template::setTitle(lang::translate('blog_simple_view_entry') . " :: $row[title]");
+        template::setTitle(
+                lang::translate('View entry') ) . 
+                MENU_SUB_SEPARATOR_SEC .  
+                $row['title'];
         
         // call the 'view' function
         blog_simple_views::view($row);
@@ -286,6 +278,8 @@ class blog_simple {
     }
     
     /**
+     * add controller
+     * 
      * method for adding a blog entry. This is the add controller.
      * This is is used when user hits /blog_simple/add
      *
@@ -295,7 +289,8 @@ class blog_simple {
 
         // we set a title for the page where this method is used
         // this is the <title> tag. in the page.
-        template::setTitle(lang::translate('blog_simple_add_title'));
+        template::setTitle(
+                lang::translate('Add entry'));
 
         // we check if user trying to add a blog entry is allowed to
         // if not we just return
@@ -331,7 +326,7 @@ class blog_simple {
                 if ($res){
                     http::locationHeader(
                             "/blog_simple/index",
-                            lang::translate('blog_simple_entry_created')
+                            lang::translate('Entry created')
                             );
                 }
             // if errors we display the erros
@@ -352,15 +347,13 @@ class blog_simple {
     }
     
     /**
-     * note this is almost exactly the same function as the insertController
-     * only difference is that we use an id for loading the form
-     *
+     * edit controller
      * @return void
      */
 
     public function editAction (){
         // we set a title for the page where ths method is used
-        template::setTitle(lang::translate('blog_simple_update_entry'));
+        template::setTitle(lang::translate('Update entry'));
 
         // we check if user is trying to add a blog entry is allowed to
         // if not we just return
@@ -383,7 +376,7 @@ class blog_simple {
                     // which will be displayed on next page.
                     http::locationHeader(
                             '/blog_simple/index', 
-                            lang::translate('blog_simple_entry_updated'));
+                            lang::translate('Entry updated'));
                 }
             } else {
                 html::errors($this->errors);
@@ -394,15 +387,14 @@ class blog_simple {
     }
     
     /**
-     * note this is almost exactly the same function as the insertController
-     * only difference is that we use an id for loading the form
+     * delete controller
      *
      * @return void
      */
     public function deleteAction (){
 
         // we set a title for the page where ths method is used
-        template::setTitle(lang::translate('blog_simple_delete_entry'));
+        template::setTitle(lang::translate('Delete entry'));
 
         // we check if user is trying to add a blog entry is allowed to
         // if not we just return
@@ -418,7 +410,7 @@ class blog_simple {
             if ($res){
                 http::locationHeader(
                         "/blog_simple/index",
-                        lang::translate('blog_simple_entry_deleted')
+                        lang::translate('Entry deleted')
                     );
             }
         } else {
